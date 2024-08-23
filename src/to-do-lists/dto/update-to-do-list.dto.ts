@@ -8,7 +8,4 @@ export class UpdateToDoListDto extends PartialType(CreateToDoListDto) {
   @MinLength(4)
   @MaxLength(50)
   name: string;
-
-  // When sharing list we need user ID
-  userId: string;
 }

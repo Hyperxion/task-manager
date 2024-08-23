@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ToDoListsService } from './to-do-lists.service';
 import { CreateToDoListDto } from './dto/create-to-do-list.dto';
@@ -14,6 +15,7 @@ import { UpdateToDoListDto } from './dto/update-to-do-list.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { GetUserId } from '../auth/getUserId.decorator';
+import { ShareListDto } from './dto/share-list.dto';
 
 @ApiTags('Stores')
 @UseGuards(AuthGuard)
@@ -30,22 +32,41 @@ export class ToDoListsController {
     return await this.toDoListsService.create(createToDoListDto);
   }
 
+  @Get('/current')
+  async findAllByUserId(@GetUserId() userId: string) {
+    return await this.toDoListsService.findAllByUserId(userId);
+  }
+
   @Get()
-  async findAll(@GetUserId() userId: string) {
-    return this.toDoListsService.findAllByUserId(userId);
+  async findAll() {
+    return this.toDoListsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.toDoListsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.toDoListsService.findOne({ where: { id } });
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateToDoListDto: UpdateToDoListDto,
+  @Patch('/share/:id')
+  async shareList(
+    @Param('id') toDoListId: string,
+    @Body() userIds: string[],
+    @GetUserId() currentUserId: string,
   ) {
-    return this.toDoListsService.update(+id, updateToDoListDto);
+    const shareListDto: ShareListDto = {
+      toDoListId,
+      userIds,
+    };
+
+    shareListDto.userIds.push(currentUserId);
+
+    const toDoList = await this.toDoListsService.findOne({
+      where: { id: toDoListId, users: { id: currentUserId } },
+    });
+
+    if (!toDoList) throw new UnauthorizedException();
+
+    return await this.toDoListsService.shareList(shareListDto);
   }
 
   @Delete(':id')

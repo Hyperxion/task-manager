@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateToDoListDto } from './dto/create-to-do-list.dto';
 import { UpdateToDoListDto } from './dto/update-to-do-list.dto';
 import { ToDoListRepository } from './to-do-lists.repository';
+import { ShareListDto } from './dto/share-list.dto';
+import { ToDoList } from './entities/to-do-list.entity';
+import { FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class ToDoListsService {
@@ -14,11 +17,38 @@ export class ToDoListsService {
   async findAllByUserId(userId: string) {
     return await this.toDoListRepository.find({
       where: { users: [{ id: userId }] },
+      select: {
+        users: {
+          id: true,
+          username: true,
+        },
+      },
+      relations: {
+        users: true,
+      },
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} toDoList`;
+  async findAll() {
+    return await this.toDoListRepository.find({
+      select: {
+        users: {
+          id: true,
+          username: true,
+        },
+      },
+      relations: {
+        users: true,
+      },
+    });
+  }
+
+  async shareList(shareListDto: ShareListDto) {
+    return await this.toDoListRepository.shareList(shareListDto);
+  }
+
+  async findOne(options?: FindOneOptions<ToDoList>) {
+    return await this.toDoListRepository.findOne(options);
   }
 
   update(id: number, updateToDoListDto: UpdateToDoListDto) {
