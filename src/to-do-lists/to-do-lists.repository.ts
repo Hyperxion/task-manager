@@ -2,9 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { ToDoList } from './entities/to-do-list.entity';
 import { CreateToDoListDto } from './dto/create-to-do-list.dto';
-import { processError } from '../constants';
+import { Constants, processError } from '../constants';
 import { User } from '../users/entities/user.entity';
 import { ShareListDto } from './dto/share-list.dto';
+import { CreateTaskItemDto } from '../task-item/dto/create-task-item.dto';
+import { TaskItem } from '../task-item/entities/task-item.entity';
+import { TaskItemStatus } from '../task-item-status/entities/task-item-status.entity';
 
 @Injectable()
 export class ToDoListRepository extends Repository<ToDoList> {
@@ -31,6 +34,24 @@ export class ToDoListRepository extends Repository<ToDoList> {
     } catch (error) {
       processError(error, ToDoList.name);
     }
+  }
+
+  async assignTask(createTaskItemDto: CreateTaskItemDto) {
+    const taskRepository = this.manager.getRepository(TaskItem);
+    const taskItem = await taskRepository.create(createTaskItemDto);
+    const toDoList = await this.findOne({
+      where: { id: createTaskItemDto.toDoListId },
+    });
+    const taskItemStatus = await this.manager
+      .getRepository(TaskItemStatus)
+      .findOne({ where: { id: Constants.TaskStatus.Active } });
+
+    taskItem.toDoList = toDoList;
+    taskItem.status = taskItemStatus;
+
+    taskRepository.save(taskItem);
+
+    return taskItem;
   }
 
   async shareList(shareListDto: ShareListDto) {

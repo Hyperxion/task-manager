@@ -21,7 +21,4 @@ export class User extends EntityTemplate {
   @ManyToMany(() => ToDoList, (toDoList) => toDoList.users, { cascade: true })
   @JoinTable()
   toDoLists: Relation<ToDoList[]>;
-
-  @OneToMany(() => TaskItem, (taskItem) => taskItem.user)
-  taskItems: Relation<TaskItem>[];
 }

@@ -5,6 +5,7 @@ import { ToDoListRepository } from './to-do-lists.repository';
 import { ShareListDto } from './dto/share-list.dto';
 import { ToDoList } from './entities/to-do-list.entity';
 import { FindOneOptions } from 'typeorm';
+import { CreateTaskItemDto } from '../task-item/dto/create-task-item.dto';
 
 @Injectable()
 export class ToDoListsService {
@@ -12,6 +13,10 @@ export class ToDoListsService {
 
   async create(createToDoListDto: CreateToDoListDto) {
     return await this.toDoListRepository.createToDoList(createToDoListDto);
+  }
+
+  async assignTask(createTaskItemDto: CreateTaskItemDto) {
+    return await this.toDoListRepository.assignTask(createTaskItemDto);
   }
 
   async findAllByUserId(userId: string) {
@@ -25,6 +30,7 @@ export class ToDoListsService {
       },
       relations: {
         users: true,
+        taskItems: true,
       },
     });
   }

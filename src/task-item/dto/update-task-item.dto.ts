@@ -1,6 +1,12 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateTaskItemDto } from './create-task-item.dto';
-import { IsString, MinLength, MaxLength, IsDateString } from 'class-validator';
+import {
+  IsString,
+  MinLength,
+  MaxLength,
+  IsDateString,
+  IsUUID,
+} from 'class-validator';
 
 export class UpdateTaskItemDto extends PartialType(CreateTaskItemDto) {
   @ApiProperty()
@@ -18,4 +24,12 @@ export class UpdateTaskItemDto extends PartialType(CreateTaskItemDto) {
   @ApiProperty()
   @IsDateString()
   deadline: Date;
+
+  @ApiProperty()
+  @IsUUID()
+  toDoListId: string;
+
+  @ApiProperty()
+  @IsUUID()
+  taskItemStatusId: string;
 }

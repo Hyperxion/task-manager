@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToMany, Relation } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, Relation } from 'typeorm';
 import { EntityTemplate } from '../../interfaces/entityTemplate';
 import { User } from '../../users/entities/user.entity';
+import { TaskItem } from '../../task-item/entities/task-item.entity';
 
 @Entity()
 export class ToDoList extends EntityTemplate {
@@ -11,4 +12,7 @@ export class ToDoList extends EntityTemplate {
 
   @ManyToMany(() => User, (user) => user.toDoLists)
   users: Relation<User[]>;
+
+  @OneToMany(() => TaskItem, (taskItem) => taskItem.toDoList)
+  taskItems: Relation<TaskItem>;
 }

@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength, MaxLength, IsDateString } from 'class-validator';
+import {
+  IsString,
+  MinLength,
+  MaxLength,
+  IsDateString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateTaskItemDto {
   @ApiProperty()
@@ -18,5 +24,5 @@ export class CreateTaskItemDto {
   @IsDateString()
   deadline: Date;
 
-  userId: string;
+  toDoListId: string;
 }
