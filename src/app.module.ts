@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ToDoListsModule } from './to-do-lists/to-do-lists.module';
 import { TaskItemModule } from './task-item/task-item.module';
+import { TaskItemStatusModule } from './task-item-status/task-item-status.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TaskItemModule } from './task-item/task-item.module';
     UsersModule,
     ToDoListsModule,
     TaskItemModule,
+    TaskItemStatusModule,
   ],
   providers: [AppService],
 })
