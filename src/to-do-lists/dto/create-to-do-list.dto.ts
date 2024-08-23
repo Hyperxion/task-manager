@@ -7,4 +7,6 @@ export class CreateToDoListDto {
   @MinLength(4)
   @MaxLength(50)
   name: string;
+
+  userId: string;
 }

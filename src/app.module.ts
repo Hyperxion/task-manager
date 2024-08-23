@@ -7,6 +7,7 @@ import databaseConfig from './config/database.config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ToDoListsModule } from './to-do-lists/to-do-lists.module';
+import { TaskItemModule } from './task-item/task-item.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ToDoListsModule } from './to-do-lists/to-do-lists.module';
     AuthModule,
     UsersModule,
     ToDoListsModule,
+    TaskItemModule,
   ],
   providers: [AppService],
 })
