@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateToDoListDto } from './dto/create-to-do-list.dto';
-import { UpdateToDoListDto } from './dto/update-to-do-list.dto';
 import { ToDoListRepository } from './to-do-lists.repository';
 import { ShareListDto } from './dto/share-list.dto';
 import { ToDoList } from './entities/to-do-list.entity';
@@ -56,13 +55,5 @@ export class ToDoListsService {
 
   async findOne(options?: FindOneOptions<ToDoList>) {
     return await this.toDoListRepository.findOne(options);
-  }
-
-  update(id: number, updateToDoListDto: UpdateToDoListDto) {
-    return `This action updates a #${id} toDoList`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} toDoList`;
   }
 }

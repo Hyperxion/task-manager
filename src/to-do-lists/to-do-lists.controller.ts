@@ -80,14 +80,4 @@ export class ToDoListsController {
 
     return await this.toDoListsService.shareList(shareListDto);
   }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return 'Not requested';
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return 'Not requested';
-  }
 }
