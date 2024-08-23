@@ -18,6 +18,7 @@ export const processError = (error, entityName: string) => {
   } else if (error.code === '23505') {
     throw new ConflictException(`${entityName} name already exists`);
   } else {
+    console.log(`-----> error is: ${JSON.stringify(error.stack, null, 2)}`);
     throw new InternalServerErrorException();
   }
 };

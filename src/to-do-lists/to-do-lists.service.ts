@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateToDoListDto } from './dto/create-to-do-list.dto';
 import { UpdateToDoListDto } from './dto/update-to-do-list.dto';
+import { ToDoListRepository } from './to-do-lists.repository';
 
 @Injectable()
 export class ToDoListsService {
-  create(createToDoListDto: CreateToDoListDto) {
-    return 'This action adds a new toDoList';
+  constructor(private toDoListRepository: ToDoListRepository) {}
+
+  async create(createToDoListDto: CreateToDoListDto) {
+    return await this.toDoListRepository.createToDoList(createToDoListDto);
   }
 
-  findAll() {
-    return `This action returns all toDoLists`;
+  async findAllByUserId(userId: string) {
+    return await this.toDoListRepository.find({
+      where: { users: [{ id: userId }] },
+    });
   }
 
   findOne(id: number) {

@@ -18,7 +18,7 @@ export class User extends EntityTemplate {
   @Column()
   password: string;
 
-  @ManyToMany(() => ToDoList, { cascade: true })
+  @ManyToMany(() => ToDoList, (toDoList) => toDoList.users, { cascade: true })
   @JoinTable()
   toDoLists: Relation<ToDoList[]>;
 

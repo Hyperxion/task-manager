@@ -15,15 +15,11 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    let isAuthEnabled = false;
-
-    if (this.configService.get('ENABLE_AUTH') === 'true') isAuthEnabled = true;
-    if (!isAuthEnabled) return true;
+    if (this.configService.get('ENABLE_AUTH') === 'true') return true;
 
     const secret = this.configService.get('JWT_SECRET');
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    const handler = context.getHandler();
     const handlerClass = context.getClass();
 
     // Login and register routes should be unprotected

@@ -9,6 +9,6 @@ export class ToDoList extends EntityTemplate {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, (user) => user.toDoLists)
   users: Relation<User[]>;
 }
