@@ -45,6 +45,7 @@ export class ToDoListsService {
       },
       relations: {
         users: true,
+        taskItems: true,
       },
     });
   }

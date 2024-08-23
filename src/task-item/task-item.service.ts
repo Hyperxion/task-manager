@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskItemDto } from './dto/create-task-item.dto';
 import { UpdateTaskItemDto } from './dto/update-task-item.dto';
+import { TaskItemRepository } from './task-item.repository';
 
 @Injectable()
 export class TaskItemService {
-  create(createTaskItemDto: CreateTaskItemDto) {
-    return 'This action adds a new taskItem';
+  constructor(private taskItemRepository: TaskItemRepository) {}
+
+  async update(updateTaskItemDto: UpdateTaskItemDto) {
+    return this.taskItemRepository.updateStatus(updateTaskItemDto);
   }
 
-  findAll() {
-    return `This action returns all taskItem`;
-  }
+  async isTaskItemOwner(taskItemId: string, userId: string) {
+    const list = await this.taskItemRepository.findOne({
+      where: { id: taskItemId },
+      select: {
+        toDoList: {
+          id: true,
+          users: {
+            id: true,
+          },
+        },
+      },
+      relations: {
+        toDoList: {
+          users: true,
+        },
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} taskItem`;
-  }
+    const users = list.toDoList.users;
 
-  update(id: number, updateTaskItemDto: UpdateTaskItemDto) {
-    return `This action updates a #${id} taskItem`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} taskItem`;
+    if (users.some((obj) => obj.id === userId)) return true;
   }
 }

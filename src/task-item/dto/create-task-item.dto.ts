@@ -9,6 +9,10 @@ import {
 
 export class CreateTaskItemDto {
   @ApiProperty()
+  @IsUUID()
+  id: string;
+
+  @ApiProperty()
   @IsString()
   @MinLength(4)
   @MaxLength(50)

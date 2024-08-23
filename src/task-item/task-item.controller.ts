@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { TaskItemService } from './task-item.service';
 import { CreateTaskItemDto } from './dto/create-task-item.dto';
 import { UpdateTaskItemDto } from './dto/update-task-item.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
+import { GetUserId } from '../auth/getUserId.decorator';
 
 @ApiTags('task-items')
 @UseGuards(AuthGuard)
@@ -20,31 +22,16 @@ import { AuthGuard } from '../auth/auth.guard';
 export class TaskItemController {
   constructor(private readonly taskItemService: TaskItemService) {}
 
-  @Post()
-  async create(@Body() createTaskItemDto: CreateTaskItemDto) {
-    return this.taskItemService.create(createTaskItemDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.taskItemService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskItemService.findOne(+id);
-  }
-
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateTaskItemDto: UpdateTaskItemDto,
+    @GetUserId() userId: string,
   ) {
-    return this.taskItemService.update(+id, updateTaskItemDto);
-  }
+    const isAllowed = await this.taskItemService.isTaskItemOwner(id, userId);
+    if (!isAllowed) throw new NotFoundException();
+    updateTaskItemDto.id = id;
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskItemService.remove(+id);
+    return await this.taskItemService.update(updateTaskItemDto);
   }
 }
